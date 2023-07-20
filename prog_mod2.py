@@ -14,7 +14,7 @@ tabla_transiciones = {
         'VIm7': {'IIm7': 0.4, 'IIIm7': 0.6},
     },
     'Dorico': {
-        'Im7': {'IIm7': 0.35, 'IIIbmaj7': 0.15, 'IV6': 0.15, 'VIIb': 0.35},
+        'Im7': {'IIm7': 0.35, 'Vm7': 0.15, 'IV6': 0.15, 'VIIb': 0.35},
         'IIm7': {'Im7': 0.35, 'IIm7': 0.35, 'IV6': 0.3},
         'IIIbmaj7': {'IIm7': 0.35, 'IIIbmaj7': 0.35, 'VIIb': 0.3},
         'IV6': {'Im7': 0.15, 'IIIbmaj7': 0.35, 'IV6': 0.35, 'VIIb': 0.15},
