@@ -15,10 +15,10 @@ tabla_transiciones = {
     },
     'Dorico': {
         'Im7': {'IIm7': 0.35, 'Vm7': 0.15, 'IV6': 0.15, 'VIIb': 0.35},
-        'IIm7': {'Im7': 0.35, 'IIIbmaj7': 0.35, 'Vm7': 0.3},
+        'IIm7': {'Im7': 0.4, 'IIIbmaj7': 0.4, 'Vm7': 0.2},
         'IIIbmaj7': {'IIm7': 0.35, 'IV6': 0.35, 'VIIb': 0.3},
-        'IV6': {'Im7': 0.15, 'IIIbmaj7': 0.35, 'IV6': 0.35, 'VIIb': 0.15},
-        'Vm7': {'Im7': 0.2, 'IIm7': 0.2, 'IV6': 0.6},
+        'IV6': {'Im7': 0.2, 'IIIbmaj7': 0.4, 'Vm7': 0.4},
+        'Vm7': {'IIm7': 0.4, 'IV6': 0.6},
         'VIIb': {'Im7': 0.6, 'IIIbmaj7': 0.2, 'IV6': 0.2}
     },
     'Frigio': {
