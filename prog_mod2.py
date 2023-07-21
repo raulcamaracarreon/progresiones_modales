@@ -10,11 +10,11 @@ tabla_transiciones = {
         'Imaj7/sus4': {'IIm7': 0.4, 'IVmaj7': 0.4, 'VIm7': 0.2},
         'IIm7': {'Imaj7/sus4': 0.4, 'IIIm7': 0.4, 'VIm7': 0.2},
         'IIIm7': {'IIm7': 0.4, 'IVmaj7': 0.4, 'VIm7': 0.2},
-        'IVmaj7': {'Imaj7/sus4': 0.6, 'IIIm7': 0.4},
+        'IVmaj7': {'Imaj7/sus4': 0.5, 'IIIm7': 0.5},
         'VIm7': {'IIm7': 0.4, 'IIIm7': 0.6},
     },
     'Dorico': {
-        'Im7': {'IIm7': 0.35, 'Vm7': 0.15, 'IV6': 0.15, 'VIIb': 0.35},
+        'Im7': {'IIm7': 0.4, 'Vm7': 0.2, 'VIIb': 0.4},
         'IIm7': {'Im7': 0.4, 'IIIbmaj7': 0.4, 'Vm7': 0.2},
         'IIIbmaj7': {'IIm7': 0.35, 'IV6': 0.35, 'VIIb': 0.3},
         'IV6': {'Im7': 0.2, 'IIIbmaj7': 0.4, 'Vm7': 0.4},
