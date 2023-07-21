@@ -77,7 +77,7 @@ def romano_a_entero(numero_romano):
         return dict_romano[match.group(1)]
     else:
         return None
-@st.cache_data
+
 def generar_progresion(modo, num_acordes, tonalidad):
     # Aseguramos que el primer acorde sea el acorde de tónica.
     acorde_actual = list(tabla_transiciones[modo].keys())[0]
