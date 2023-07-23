@@ -10,16 +10,16 @@ tabla_transiciones = {
         'Imaj7/sus4': {'IIm7': 0.4, 'IVmaj7': 0.4, 'VIm7': 0.2},
         'IIm7': {'Imaj7/sus4': 0.4, 'IIIm7': 0.4, 'VIm7': 0.2},
         'IIIm7': {'IIm7': 0.4, 'IVmaj7': 0.4, 'VIm7': 0.2},
-        'IVmaj7': {'Imaj7/sus4': 0.5, 'IIIm7': 0.5},
+        'IVmaj7': {'Imaj7/sus4': 0.6, 'IIIm7': 0.4},
         'VIm7': {'IIm7': 0.4, 'IIIm7': 0.6},
     },
     'Dorico': {
-        'Im7': {'IIm7': 0.4, 'Vm7': 0.2, 'VIIb': 0.4},
-        'IIm7': {'Im7': 0.4, 'IIIbmaj7': 0.4, 'Vm7': 0.2},
-        'IIIbmaj7': {'IIm7': 0.35, 'IV6': 0.35, 'VIIb': 0.3},
-        'IV6': {'Im7': 0.2, 'IIIbmaj7': 0.4, 'Vm7': 0.4},
-        'Vm7': {'IIm7': 0.4, 'IV6': 0.6},
-        'VIIb': {'Im7': 0.6, 'IIIbmaj7': 0.2, 'IV6': 0.2}
+        'Im7': {'IIm7': 0.35, 'Vm7': 0.3, 'VIIb': 0.35},
+        'IIm7': {'Im7': 0.35, 'IIIbmaj7': 0.35, 'Vm7': 0.3},
+        'IIIbmaj7': {'IIm7': 0.35, 'IIIbmaj7': 0.35, 'VIIb': 0.3},
+        'IV6': {'Im7': 0.2, 'IIIbmaj7': 0.4, 'IV6': 0.4},
+        'Vm7': {'Im7': 0.2, 'IIm7': 0.2, 'IV6': 0.6},
+        'VIIb': {'Im7': 0.5,  'IV6': 0.5}
     },
     'Frigio': {
         'Im7': {'IIbmaj7': 0.4, 'IVm7': 0.2, 'VIIbm7': 0.4},
@@ -78,21 +78,23 @@ def romano_a_entero(numero_romano):
     else:
         return None
 
-def generar_progresion(modo, num_acordes, tonalidad):
-    # Aseguramos que el primer acorde sea el acorde de tónica.
+def generar_progresion(modo, num_acordes, tonalidad, pivot=None):
+    if modo not in tabla_transiciones or tonalidad not in tonalidades_notas:
+        return []
+
     acorde_actual = list(tabla_transiciones[modo].keys())[0]
     progresion = [acorde_actual]
 
     while len(progresion) < num_acordes:
-        acordes_posibles = list(tabla_transiciones[modo][acorde_actual].keys())
-        pesos = list(tabla_transiciones[modo][acorde_actual].values())
+        if pivot is not None and len(progresion) % pivot == 0:
+            acorde_actual = list(tabla_transiciones[modo].keys())[0]
+        else:
+            acordes_posibles = list(tabla_transiciones[modo][acorde_actual].keys())
+            if acorde_actual in acordes_posibles:
+                acordes_posibles.remove(acorde_actual)
 
-        # Generamos el próximo acorde y nos aseguramos de que no sea igual al acorde actual
-        nuevo_acorde = random.choices(acordes_posibles, weights=pesos, k=1)[0]
-        while nuevo_acorde == acorde_actual:
-            nuevo_acorde = random.choices(acordes_posibles, weights=pesos, k=1)[0]
-
-        acorde_actual = nuevo_acorde
+            pesos = [tabla_transiciones[modo][acorde_actual][acorde] for acorde in acordes_posibles]
+            acorde_actual = random.choices(acordes_posibles, weights=pesos, k=1)[0]
         progresion.append(acorde_actual)
 
     progresion = [tonalidades_notas[tonalidad][romano_a_entero(acorde.split('/')[0]) - 1] + acorde[len(re.match(r'([IV]+)', acorde.split('/')[0]).group(0)):] if '/' in acorde else tonalidades_notas[tonalidad][romano_a_entero(acorde) - 1] + acorde[len(re.match(r'([IV]+)', acorde).group(0)):] for acorde in progresion]
@@ -114,29 +116,30 @@ def generar_progresion(modo, num_acordes, tonalidad):
 
     return progresion_corregida
 
-
-
-
 # Código de Streamlit
-st.sidebar.title('Generador de Progresiones modales por grados contiguos')
+st.sidebar.title('Generador de Progresiones modales por grados contiguos e intervalos justos -IV, V-')
 
 def main():
     tonalidad = st.sidebar.selectbox('Selecciona una tonalidad:', list(tonalidades_notas.keys()))
     modo = st.sidebar.selectbox('Selecciona un modo:', list(tabla_transiciones.keys()))
-    num_acordes = st.sidebar.slider('Número de acordes:', min_value=1, max_value=64, value=16)
+    num_acordes = st.sidebar.slider('Número de acordes:', min_value=1, max_value=128, value=16)
     
     # Agregamos los controles de tamaño de fuente y negritas
     tamano_fuente = st.sidebar.slider('Tamaño de fuente', 10, 50, 20)
     negritas = st.sidebar.checkbox('Negritas')
 
     # Genera la progresión automáticamente en cada renderizado de la aplicación
-    progresion = generar_progresion(modo, num_acordes, tonalidad)
+    pivot = st.sidebar.slider('Presencia de la Tónica:', min_value=1, max_value=num_acordes, value=4)
+    st.sidebar.write(f"Pivote de tónica cada {pivot} notas")  # Este es el texto de la leyenda que está vinculado con el valor del deslizador.
+
+    progresion = generar_progresion(modo, num_acordes, tonalidad, pivot)
 
     # Aplicamos el estilo seleccionado a la progresión de acordes
     st.markdown(f"<div style='font-size: {tamano_fuente}px; {'font-weight: bold;' if negritas else ''}'>||: {' | '.join(progresion)} :||</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
+       
     
 st.write("")
 st.write("")
